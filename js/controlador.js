@@ -153,5 +153,65 @@ angular.module('buscaTabu').controller('calculo', function ($scope) {
     }
 
 
-    
+    $scope.calcular = function () {
+
+        var o, solucaoTemporaria, solucao;
+        solucaoTemporaria = angular.copy($scope.solucaoInicial);
+
+        try {
+            for (o = 0; o < $scope.maxInteracoes; o++) {
+
+                $scope.matrizVizinhos = gerarMatrizVizinhos(solucaoTemporaria);
+                obterResultado($scope.matrizVizinhos, $scope.objetos);
+                $scope.todosVizinhos.push(angular.copy($scope.matrizVizinhos));
+
+                solucao = obterTabu($scope.matrizVizinhos);
+                solucao.solucaoTemporaria = angular.copy($scope.solucaoInicial);
+                solucao.solucaoTemporaria[solucao.tabu - 1] = (solucao.solucaoTemporaria[solucao.tabu - 1] === 0 ? 1 : 0);
+                $scope.todasSolucoes.push(angular.copy(solucao));
+                solucaoTemporaria = angular.copy(solucao.solucaoTemporaria);
+
+                if (solucao.max > $scope.melhorSolucao.fs) {
+
+                    o = 0;
+                    $scope.melhorSolucao.vizihos = angular.copy($scope.matrizVizinhos);
+                    $scope.melhorSolucao.solucao = angular.copy(solucao.solucaoTemporaria);
+                    $scope.melhorSolucao.tabu = angular.copy(solucao.tabu);
+                    $scope.melhorSolucao.fs = angular.copy(solucao.max);
+
+                    console.log('teste');
+                }
+            }
+        } catch (err) {
+            $scope.erro = true;
+        }
+    };
+
+    $scope.obj = [
+        {
+            "objeto": "Objeto 1",
+            "peso": 4,
+            "beneficio": 2
+        },
+        {
+            "objeto": "Objeto 2",
+            "peso": 5,
+            "beneficio": 2
+        },
+        {
+            "objeto": "Objeto 3",
+            "peso": 7,
+            "beneficio": 3
+        },
+        {
+            "objeto": "Objeto 4",
+            "peso": 9,
+            "beneficio": 4
+        },
+        {
+            "objeto": "Objeto 5",
+            "peso": 6,
+            "beneficio": 4
+        }
+    ];
 });
