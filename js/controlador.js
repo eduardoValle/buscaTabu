@@ -22,7 +22,6 @@ angular.module('buscaTabu').controller('calculo', function ($scope) {
         return (indice === 0 ? "text" : "number");
     };
 
-
     // Definindo o valor inicial da solução.
     // $scope.solucaoInicial = [0, 1, 0, 1, 0];
     $scope.solucaoInicial = [0, 0, 1];
