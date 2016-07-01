@@ -52,5 +52,34 @@ angular.module('buscaTabu').controller('calculo', function ($scope) {
         }
     };
 
-    
+    /**
+     * Criado para avancar ao clicar no botão "Interação seguinte" na tabela de resultados.
+     */
+    $scope.interacaoSeguinte = function () {
+        if ($scope.result < $scope.todasSolucoes.length - 1) {
+            $scope.result += 1;
+        }
+    };
+
+
+    /**
+     * Adiciona um campo na tabela de objetos e adiciona um valor na solução inicial.
+     */
+    $scope.addCampo = function () {
+
+        var novo = {objeto: "Objeto " + ($scope.objetos.length + 1), peso: 0, beneficio: 0};
+        $scope.objetos.push(novo);
+        $scope.solucaoInicial.push(0);
+    };
+
+
+    /**
+     * Remove o ultimo campo da tabela de objetos e remove o ultimo valor da solução inicial.
+     */
+    $scope.removeCampo = function () {
+        $scope.objetos.pop();
+        $scope.solucaoInicial.pop();
+    };
+
+
 });
