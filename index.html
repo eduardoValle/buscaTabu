@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html ng-app="buscaTabu">
+    <head>
+        <title>Busca Tabu</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <script src="libs/angular.js"></script>
+        <script src="js/controlador.js"></script>
+    </head>
+    <body class="fundo" ng-controller="calculo">
+        <div class="topo">
+            <h2>Busca tabu: problema da mochila</h2>
+        </div>
+
+        <div class="modif">
+            
+            <h4>Dados iniciais:</h4>
+            
+            <div class="form-group col-lg-12">
+                <div class="form-group col-lg-4">
+                    <span>Peso total que se pode carregar:
+                        <input type="number" class="form-control" ng-model="pesoMaximo">
+                    </span>
+                </div>
+
+                <div class="form-group col-lg-4">
+                    <span>Valor de Alpha:
+                        <input type="number" class="form-control" ng-model="alpha">
+                    </span>
+                </div>
+
+                <div class="form-group col-lg-4">
+                    <span>Número máximo de iterações:
+                        <input type="number" class="form-control" ng-model="maxInteracoes">
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="form-group col-lg-12">
+                <div class="form-group col-lg-4">
+                    <button class="form-control btn-success" ng-click="addCampo();">Adicionar objeto</button>
+                </div>
+
+                <div class="form-group col-lg-4">
+                    <button class="form-control btn-danger" ng-click="removeCampo();">Remover objeto</button>
+                </div>
+
+                <div class="form-group col-lg-4">
+                    <button class="form-control btn-primary" ng-click="calcular();" ng-disabled="!pesoMaximo || !alpha || !maxInteracoes">Calcular</button>
+                </div>
+            </div>
+            .
+            <!-- DADOS DA EQUAÇÃO -->
+            <div class="form-group ultable">
+                <h4>Solução inicial:</h4>
+                <table border='1' class="table table-striped table-responsive">
+                    <tr>
+                        <td ng-repeat="solucao in solucaoInicial track by $index">
+                            <input type="number" class="form-control" ng-model="solucaoInicial[$index]">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- TABELA DE OBJETOS -->
+            <div class="ultable">
+                <h4>Dados dos Objetos:</h4>
+                <table border='1' class="table table-striped table-responsive">
+                    <tr>
+                        <th>Objeto</th>
+                        <th>Peso</th>
+                        <th>Benefício</th>
+                    </tr>
+
+                    <tr ng-repeat="obj in objetos track by $index">
+                        <td ng-repeat="(key, value) in obj">
+                            <input type="{{tipo($index);}}" class="form-control" ng-model="obj[key]">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="modif" ng-if="matrizVizinhos">
+            <!-- TABELA DE RESULTADOS -->
+            <div class="ultable">
+                <h4>Evolução da tabela - Interação {{(result + 1) + " de " + todasSolucoes.length}}:</h4>
+                <table border='1' class="table table-striped table-responsive">
+                    <tr>
+                        <th ng-repeat="sol in solucaoInicial track by $index">{{sol}}</th>
+                        <th>Bi</th>
+                        <th>Pi</th>
+                        <th>F(s)</th>
+                    </tr>
+
+                    <tr ng-repeat="mat in todosVizinhos[result]">
+                        <td ng-repeat="(key, value) in mat track by $index">
+                            <input type="text" class="form-control" ng-model="mat[key]">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- INFORMAÇÕES -->
+            <div>
+                <!-- TABU -->
+                <div class="ultable">
+                    <h4>Valor de tabu:</h4>
+                    <h3>{{todasSolucoes[result].tabu}}</h3>
+                </div>
+
+                <!-- SOLUÇÃO -->
+                <div class="ultable">
+                    <h4>Valor de Solução:</h4>
+                    <h3>{{todasSolucoes[result].solucaoTemporaria}}</h3>
+                </div>
+
+                <!-- FS -->
+                <div class="ultable">
+                    <h4>Valor de F(s):</h4>
+                    <h3>{{todasSolucoes[result].max}}</h3>
+                </div>
+            </div>
+            <div class="form-group">
+                <!-- Interação anterior -->
+                <div class="form-group col-lg-4">
+                    <button class="form-control btn-success" ng-click="interacaoAnterior()">Interação anterior</button>
+                </div>
+                <!-- Interação seguinte -->
+                <div class="form-group col-lg-4">
+                    <button class="form-control btn-primary" ng-click="interacaoSeguinte()">Interação seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultado -->
+        <div class="modif form-group" ng-if="matrizVizinhos">
+
+            <h4>Melhor resultado</h4>
+
+            <!-- TABELA DE RESULTADOS >
+            <div class="ultable">
+                <table border='1' class="table table-striped table-responsive">
+                    <tr>
+                        <th ng-repeat="sol in solucaoInicial track by $index">{{sol}}</th>
+                        <th>Bi</th>
+                        <th>Pi</th>
+                        <th>F(s)</th>
+                    </tr>
+
+                    <tr ng-repeat="mel in melhorSolucao.vizihos">
+                        <td ng-repeat="(key, value) in mel track by $index">
+                            <input type="text" class="form-control" ng-model="mel[key]">
+                        </td>
+                    </tr>
+                </table>
+            </div-->
+
+            <!-- SOLUÇÃO CASO EXISTA -->
+            <div class="alert-success verde" ng-if="!erro">
+                <!-- TABU >
+                <div class="ultable">
+                    <h4>Valor de tabu:</h4>
+                    <h3>{{melhorSolucao.tabu}}</h3>
+                </div-->
+
+                <!-- SOLUÇÃO -->
+                <div class="ultable">
+                    <h4>Valor de Solução:</h4>
+                    <h3>{{melhorSolucao.solucao}}</h3>
+                </div>
+
+                <!-- FS -->
+                <div class="ultable">
+                    <h4>Valor de F(s):</h4>
+                    <h3>{{melhorSolucao.fs}}</h3>
+                </div>
+            </div>
+
+            <!-- SOLUÇÃO CASO NÃO EXISTA -->
+            <div class="alert-danger vermelha" ng-if="erro">
+                <div class="ultable">
+                    <h4>Não há solução boa para esse caso!!</h4>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="modif main_footer">
+            <a href="#" title="Projeto Simplex">&copy; Projeto Busca Tabu - Todos os Direitos Reservados</a>
+        </footer>
+    </body>
+</html>

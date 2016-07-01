@@ -1,0 +1,20 @@
+body{font-variant: small-caps;}
+
+/*TOPO*/
+.fundo{color: #cccccc; background-image: url("../imagens/fundo.jpg");}
+.topo{max-width: 968px; margin: auto; margin-top: 20px;}
+.modif{max-width: 968px; margin: auto; margin-top: 20px; font-size: 16px; padding: 20px; color: #333; background-image: url("../imagens/conteudo.jpg");}
+
+.hidden{display: none;}
+
+.verde{padding: 10px; border: 3px solid #1f471a;}
+.vermelha{padding: 10px; border: 3px solid #c9302c;}
+
+/*TABELA*/
+.bordatabela tr{border-top: #000 solid 1px;}
+.ultable{max-width: 968px; display: block; margin: 20px auto; overflow: hidden; background: #eee; padding: 0;}
+.ulsolucao{width: 400px; display: block; overflow: hidden; background: #eee; padding: 0;}
+
+.main_footer{width: 100%; text-align: center; margin-bottom: 20px;}
+.main_footer a{font-size: 14px; color: #333;}
+.main_footer a:hover{text-decoration: underline;}
